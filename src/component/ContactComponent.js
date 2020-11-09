@@ -1,7 +1,11 @@
 import React from 'react';
-import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem,
+    Button, Row, Col, Label } from 'reactstrap';
+import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+
 function Contact(props) {
+    
     return(
         <div className="container">
             <div className="row">
