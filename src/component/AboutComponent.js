@@ -8,7 +8,7 @@ import {
   Media
 } from "reactstrap";
 import { Link } from "react-router-dom";
-
+import { baseUrl } from '../shared/baseUrl';
 
 import { Fade, Stagger } from "react-animation-components";
 
@@ -17,7 +17,7 @@ function About(props) {
     return (
       <Media className="mt-5">
         <Media left className="mr-5">
-          <Media object src={leader.image} alt={leader.name} />
+          <Media object src={baseUrl+leader.image} alt={leader.name} />
         </Media>
         <Media body>
           <Media heading>{leader.name}</Media>
@@ -28,7 +28,7 @@ function About(props) {
     );
   }
 
-  function RenderContent({ leaders, isLoading, errMess }) {
+  function RenderContent({isLoading, errMess }) {
     if (isLoading) {
       return "Loading...";
     } else if (errMess) {
@@ -36,7 +36,7 @@ function About(props) {
     } else
       return (
         <Stagger in>
-          {props.leaders.map(leader => (
+          {props.leaders.leaders.map(leader => (
             <Fade in key={leader.id}>
               <RenderLeader key={leader.id} leader={leader} />
             </Fade>

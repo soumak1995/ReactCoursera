@@ -1,8 +1,11 @@
 import React,{Component} from 'react';
 import { Breadcrumb, BreadcrumbItem,
     Button, Row, Col, Label } from 'reactstrap';
-import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Control, Form, Errors, actions } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+import { baseUrl } from '../shared/baseUrl';
+
+import { Fade, Stagger } from "react-animation-components";
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
@@ -15,7 +18,34 @@ class  Contact extends Component{
     }
     handleSubmit(values) {
         console.log('Current State is: ' + JSON.stringify(values));
-        alert('Current State is: ' + JSON.stringify(values));
+        
+        const postFeedback = () => {
+            return fetch(baseUrl + 'feedback', {
+                method: "POST",
+                body: JSON.stringify(values),
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                credentials: "same-origin"
+            })
+            .then(response => {
+                if (response.ok) {
+                  return response;
+                } else {
+                  var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                  error.response = response;
+                  throw error;
+                }
+              },
+              error => {
+                    throw error;
+              })
+            .then(response => response.json())
+            .then(response => alert('Current State is: ' + JSON.stringify(response)))
+            .catch(error =>  { console.log('post feedback', error.message); alert('Your feedback could not be posted\nError: '+error.message); });
+        };
+        postFeedback();
+        this.props.resetFeedbackForm();
         // event.preventDefault();
     }
     render(){
@@ -63,7 +93,7 @@ class  Contact extends Component{
                     </div>
                 
                 <div className="col-12 col-md-9">
-                <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                <Form model="feedback" onSubmit={(values) => this.handleSubmit(values)}>
                 <Row className="form-group">
                                 <Label htmlFor="firstname" md={2}>First Name</Label>
                                 <Col md={10}>
@@ -186,7 +216,7 @@ class  Contact extends Component{
                                         </Button>
                                     </Col>
                                 </Row>
-                            </LocalForm>
+                            </Form>
                             </div>
                 </div>
             </div>
